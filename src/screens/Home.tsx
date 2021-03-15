@@ -1,6 +1,11 @@
-const Login: React.FC = () => {
+import { isLoggedInVar } from "../apollo";
+
+const Home: React.FC = () => {
     return (
-        <h1>Login</h1>
+        <div>
+            <h1>Home</h1>
+            <button onClick={() => isLoggedInVar(false)}>Logout</button>
+        </div>
     )
 }
-export default Login;
+export default Home;
