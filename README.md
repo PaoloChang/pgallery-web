@@ -6,3 +6,11 @@ Photo Gallery application for web built with React (TypeScripts)
 - [x] Authentication
 - [x] Architecture
 - [x] Styles (Themes)
+
+# User Interface
+
+- [x] Login
+- [ ] Sign Up
+- [ ] Feed
+- [ ] Profile
+- [ ] Direct Message
