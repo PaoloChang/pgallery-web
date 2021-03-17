@@ -9,6 +9,8 @@ import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
 import routes from "../routes";
 import { LogoBase } from "../components/shared";
+import { Helmet } from "react-helmet-async";
+import pageTitle from "../scripts/shared";
 
 const FacebookLogin = styled.div`
     margin: 10px 0 20px;
@@ -26,6 +28,8 @@ const Logo = styled(LogoBase)`
 const Login: React.FC = () => {
     return (
         <AuthLayout>
+            {/* <PageTitle title="Login"/> */}
+            <Helmet title={pageTitle("Login")} />
             <FormBox>
                 <Logo>PGallery</Logo>
                 <form style={{ marginTop: "25px" }}>
