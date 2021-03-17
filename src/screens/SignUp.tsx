@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import AuthLayout from '../components/auth/AuthLayout';
@@ -9,9 +8,9 @@ import FormBox from '../components/auth/FormBox';
 import FormError from '../components/auth/FormError';
 import Input from '../components/auth/Input';
 import Separator from '../components/auth/Separator';
+import PageTitle from '../components/PageTitle';
 import { FatLink, LogoBase } from '../components/shared';
 import routes from '../routes';
-import pageTitle from '../scripts/shared';
 
 const HeaderContainer = styled.div`
     display: flex;
@@ -52,8 +51,7 @@ const SignUp: React.FC = () => {
     }
     return (
         <AuthLayout>
-            {/* <PageTitle title="Sign up"/> */}
-            <Helmet title={pageTitle("Sign up")} />
+            <PageTitle title="Sign up"/>
             <FormBox>
                 <HeaderContainer>
                     <Logo>PGallery</Logo>
