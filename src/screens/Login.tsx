@@ -9,10 +9,9 @@ import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
 import routes from "../routes";
 import { LogoBase } from "../components/shared";
-import { Helmet } from "react-helmet-async";
-import pageTitle from "../scripts/shared";
 import { useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
+import PageTitle from "../components/PageTitle";
 
 const FacebookLogin = styled.div`
     margin: 10px 0 20px;
@@ -44,7 +43,7 @@ const Login: React.FC = () => {
     console.log(formState.isValid)
     return (
         <AuthLayout>
-            <Helmet title={pageTitle("Login")} />
+            <PageTitle title={"Login"} />
             <FormBox>
                 <Logo>PGallery</Logo>
                 <form 
