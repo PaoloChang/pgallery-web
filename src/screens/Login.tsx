@@ -12,6 +12,8 @@ import { LogoBase } from "../components/shared";
 import { useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
 import PageTitle from "../components/PageTitle";
+import { gql, useMutation } from "@apollo/client";
+import { logUserIn } from "../apollo";
 
 const FacebookLogin = styled.div`
     margin: 10px 0 20px;
@@ -29,18 +31,52 @@ const Logo = styled(LogoBase)`
 interface IFormInput {
     username: string;
     password: string;
+    result: string;
 }
 
+const LOGIN_MUTATION = gql`
+    mutation login($username:String!, $password:String!) {
+        login(username:$username, password:$password) {
+            status
+            token
+            error
+        }
+    }
+`;
+
 const Login: React.FC = () => {
-    const { register, handleSubmit, errors, formState } = useForm<IFormInput>({
+    const { 
+        register, handleSubmit, errors, formState, getValues, setError, clearErrors
+    } = useForm<IFormInput>({
         mode: "onChange",
     });
 
+    const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+        onCompleted: (data) => {
+            const { login: { status, error, token } } = data;
+            if (!status) {
+                return setError("result", {
+                    message: error,
+                })
+            }
+            if (token) {
+                logUserIn(token);
+            }
+        }
+    });
+
     const onSubmitValid = (data: IFormInput) => {
-        console.log(data);
+        if (loading) return
+        const { username, password } = getValues();
+        login({
+            variables: { username, password }
+        })
     }
 
-    console.log(formState.isValid)
+    const clearLoginError = () => {
+        clearErrors("result");
+    }
+
     return (
         <AuthLayout>
             <PageTitle title={"Login"} />
@@ -57,6 +93,7 @@ const Login: React.FC = () => {
                                 message: "Username should be longer than 6 characters"
                             },
                         })} 
+                        onChange={clearLoginError}
                         name="username" 
                         type="text" 
                         placeholder="Username"
@@ -66,12 +103,17 @@ const Login: React.FC = () => {
                         ref={register({
                             required: "Password is required",
                         })}  
+                        onChange={clearLoginError}
                         name="password" 
                         type="password" 
                         placeholder="Password"
                         hasError={Boolean(errors?.password?.message)} />
                     <FormError message={errors?.password?.message} />
-                    <Button type="submit" value="Log in" disabled={!formState.isValid} />
+                    <FormError message={errors?.result?.message} />
+                    <Button 
+                        type="submit" 
+                        value={ loading ? "Loading..." : "Log in" }
+                        disabled={!formState.isValid || loading} />
                 </form>
                 <Separator/>
                 <FacebookLogin>
