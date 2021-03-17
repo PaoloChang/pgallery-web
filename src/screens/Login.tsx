@@ -11,6 +11,8 @@ import routes from "../routes";
 import { LogoBase } from "../components/shared";
 import { Helmet } from "react-helmet-async";
 import pageTitle from "../scripts/shared";
+import { useForm } from "react-hook-form";
+import FormError from "../components/auth/FormError";
 
 const FacebookLogin = styled.div`
     margin: 10px 0 20px;
@@ -25,17 +27,52 @@ const Logo = styled(LogoBase)`
     font-size: 25px;
 `;
 
+interface IFormInput {
+    username: string;
+    password: string;
+}
+
 const Login: React.FC = () => {
+    const { register, handleSubmit, errors, formState } = useForm<IFormInput>({
+        mode: "onChange",
+    });
+
+    const onSubmitValid = (data: IFormInput) => {
+        console.log(data);
+    }
+
+    console.log(formState.isValid)
     return (
         <AuthLayout>
-            {/* <PageTitle title="Login"/> */}
             <Helmet title={pageTitle("Login")} />
             <FormBox>
                 <Logo>PGallery</Logo>
-                <form style={{ marginTop: "25px" }}>
-                    <Input type="text" placeholder="Username" />
-                    <Input type="password" placeholder="Password" />
-                    <Button type="submit" value="Log in"/>
+                <form 
+                    onSubmit={handleSubmit(onSubmitValid)} 
+                    style={{ marginTop: "25px" }}>
+                    <Input 
+                        ref={register({
+                            required: "Username is required",
+                            minLength: {
+                                value: 6,
+                                message: "Username should be longer than 6 characters"
+                            },
+                        })} 
+                        name="username" 
+                        type="text" 
+                        placeholder="Username"
+                        hasError={Boolean(errors?.username?.message)} />
+                    <FormError message={errors?.username?.message} />
+                    <Input 
+                        ref={register({
+                            required: "Password is required",
+                        })}  
+                        name="password" 
+                        type="password" 
+                        placeholder="Password"
+                        hasError={Boolean(errors?.password?.message)} />
+                    <FormError message={errors?.password?.message} />
+                    <Button type="submit" value="Log in" disabled={!formState.isValid} />
                 </form>
                 <Separator/>
                 <FacebookLogin>
