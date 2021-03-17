@@ -8,7 +8,11 @@ interface IPageTitleProps {
 
 const PageTitle: React.FC<IPageTitleProps> = ({ title }) => {
     title = `${title} | PGallery`;
-    return <Helmet>{title}</Helmet>;
+    return (
+        <Helmet>
+            <title>{title}</title>
+        </Helmet>
+    );
 };
 
 PageTitle.propTypes = {
