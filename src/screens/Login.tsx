@@ -14,6 +14,7 @@ import FormError from "../components/auth/FormError";
 import PageTitle from "../components/PageTitle";
 import { gql, useMutation } from "@apollo/client";
 import { logUserIn } from "../apollo";
+import { useLocation } from "react-router";
 
 const FacebookLogin = styled.div`
     margin: 10px 0 20px;
@@ -27,6 +28,16 @@ const FacebookLogin = styled.div`
 const Logo = styled(LogoBase)`
     font-size: 25px;
 `;
+
+const Notification = styled.div`
+    color: #2ecc71;
+`;
+
+interface ILocationState {
+    message: string;
+    username: string;
+    password: string;
+}
 
 interface IFormInput {
     username: string;
@@ -45,10 +56,16 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login: React.FC = () => {
+    const location = useLocation<ILocationState>();
+    console.log(location)
     const { 
         register, handleSubmit, errors, formState, getValues, setError, clearErrors
     } = useForm<IFormInput>({
         mode: "onChange",
+        defaultValues: {
+            username: location?.state?.username || "",
+            password: location?.state?.password || ""
+        }
     });
 
     const [login, { loading }] = useMutation(LOGIN_MUTATION, {
@@ -82,6 +99,7 @@ const Login: React.FC = () => {
             <PageTitle title={"Login"} />
             <FormBox>
                 <Logo>PGallery</Logo>
+                <Notification>{location?.state?.message}</Notification>
                 <form 
                     onSubmit={handleSubmit(onSubmitValid)} 
                     style={{ marginTop: "25px" }}>

@@ -1,5 +1,7 @@
+import { gql, useMutation } from '@apollo/client';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import AuthLayout from '../components/auth/AuthLayout';
 import BottomBox from '../components/auth/BottomBox';
@@ -36,19 +38,80 @@ const Logo = styled(LogoBase)`
 `;
 
 interface IFormInput {
-    mobileEmail: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     username: string;
+    email: string;
     password: string;
+    result: string
 }
 
+const CREATE_ACCOUNT_MUTATION =gql`
+    mutation createAccount(
+        $firstName: String!
+        $lastName: String
+        $username: String!
+        $email: String!
+        $password: String!
+    ) {
+        createAccount(
+            firstName: $firstName
+            lastName: $lastName
+            username: $username
+            email: $email
+            password: $password
+        ) {
+            status
+            error
+        }
+    }
+`;
+
 const SignUp: React.FC = () => {
-    const { register, handleSubmit, errors, formState } = useForm<IFormInput>({
+    const history = useHistory();
+
+    const { 
+        register, handleSubmit, errors, formState, setError, clearErrors, getValues 
+    } = useForm<IFormInput>({
         mode: "onChange",
     });
+
+    const [ createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
+        onCompleted: (data) => {
+            const { createAccount: { status, error }} = data;
+            const { username, password } = getValues();
+            if (!status) {
+                return setError("result", {
+                    message: error
+                });
+            };
+            console.log(`onCompleted: sending ${username}, ${password} as a state`)
+            const state = {
+                message: "Account created. Please log in.", 
+                username, 
+                password
+            }
+            console.log(state)
+            history.push(routes.home, {
+                message: "Account created. Please log in."
+            });
+        }
+    });
+
+    
     const onSubmitValid = (data: IFormInput) => {
-        console.log(data);
+        if (loading) return
+        createAccount({
+            variables: {
+                ...data
+            }
+        })
     }
+    
+    const clearLoginError = () => {
+        clearErrors("result");
+    }
+
     return (
         <AuthLayout>
             <PageTitle title="Sign up"/>
@@ -65,20 +128,20 @@ const SignUp: React.FC = () => {
                     onSubmit={handleSubmit(onSubmitValid)} >
                     <Input 
                         ref={register({
-                            required: "Mobile number or Email is required",
+                            required: "First name is required",
                         })}
-                        name="mobileEmail"
-                        type="text" placeholder="Mobile number or Email"
-                        hasError={Boolean(errors?.mobileEmail?.message)} />
-                    <FormError message={errors?.mobileEmail?.message} />
+                        name="firstName"
+                        type="text" placeholder="First name"
+                        onChange={clearLoginError}
+                        hasError={Boolean(errors?.firstName?.message)} />
+                    <FormError message={errors?.firstName?.message} />
                     <Input 
-                        ref={register({
-                            required: "Name is required",
-                        })}
-                        name="name"
-                        type="text" placeholder="Full name"
-                        hasError={Boolean(errors?.name?.message)} />
-                    <FormError message={errors?.name?.message} />
+                        ref={register}
+                        name="lastName"
+                        type="text" placeholder="Last name"
+                        onChange={clearLoginError}
+                        hasError={Boolean(errors?.lastName?.message)} />
+                    <FormError message={errors?.lastName?.message} />
                     <Input 
                         ref={register({
                             required: "Username is required",
@@ -89,17 +152,32 @@ const SignUp: React.FC = () => {
                         })}
                         name="username"
                         type="text" placeholder="Username"
+                        onChange={clearLoginError}
                         hasError={Boolean(errors?.username?.message)} />
                     <FormError message={errors?.username?.message} />
+                    <Input 
+                        ref={register({
+                            required: "E-mail is required",
+                        })}
+                        name="email"
+                        type="email" placeholder="E-mail"
+                        onChange={clearLoginError}
+                        hasError={Boolean(errors?.email?.message)} />
+                    <FormError message={errors?.email?.message} />
                     <Input 
                         ref={register({
                             required: "Password is required",
                         })}
                         name="password"
                         type="password" placeholder="Password"
+                        onChange={clearLoginError}
                         hasError={Boolean(errors?.password?.message)} />
                     <FormError message={errors?.password?.message} />
-                    <Button type="submit" value="Sign up"disabled={!formState.isValid} />
+                    <FormError message={errors?.result?.message} />
+                    <Button 
+                        type="submit" 
+                        value={ loading ? "Loading..." : "Sign up" }
+                        disabled={!formState.isValid || loading} />
                 </form>
                 <Info>By signing up, you agree to our Terms , Data Policy and Cookies Policy .</Info>
             </FormBox>
