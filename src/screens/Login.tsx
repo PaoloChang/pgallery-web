@@ -9,7 +9,7 @@ import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
 import routes from "../routes";
 import { LogoBase } from "../components/shared";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
 import PageTitle from "../components/PageTitle";
 import { gql, useMutation } from "@apollo/client";
@@ -39,7 +39,7 @@ interface ILocationState {
     password: string;
 }
 
-interface IFormInput {
+interface IForm {
     username: string;
     password: string;
     result: string;
@@ -60,7 +60,7 @@ const Login: React.FC = () => {
     console.log(location)
     const { 
         register, handleSubmit, errors, formState, getValues, setError, clearErrors
-    } = useForm<IFormInput>({
+    } = useForm<IForm>({
         mode: "onChange",
         defaultValues: {
             username: location?.state?.username || "",
@@ -82,9 +82,9 @@ const Login: React.FC = () => {
         }
     });
 
-    const onSubmitValid = (data: IFormInput) => {
+    const onSubmitValid:SubmitHandler<IForm> = (data) => {
         if (loading) return
-        const { username, password } = getValues();
+        const { username, password } = data;
         login({
             variables: { username, password }
         })

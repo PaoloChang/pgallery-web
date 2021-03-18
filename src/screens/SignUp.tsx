@@ -1,6 +1,6 @@
 import { gql, useMutation } from '@apollo/client';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import AuthLayout from '../components/auth/AuthLayout';
@@ -37,7 +37,7 @@ const Logo = styled(LogoBase)`
     font-size: 25px;
 `;
 
-interface IFormInput {
+interface IForm {
     firstName: string;
     lastName: string;
     username: string;
@@ -72,7 +72,7 @@ const SignUp: React.FC = () => {
 
     const { 
         register, handleSubmit, errors, formState, setError, clearErrors, getValues 
-    } = useForm<IFormInput>({
+    } = useForm<IForm>({
         mode: "onChange",
     });
 
@@ -99,7 +99,7 @@ const SignUp: React.FC = () => {
     });
 
     
-    const onSubmitValid = (data: IFormInput) => {
+    const onSubmitValid:SubmitHandler<IForm> = (data) => {
         if (loading) return
         createAccount({
             variables: {
