@@ -13,6 +13,7 @@ import Separator from '../components/auth/Separator';
 import PageTitle from '../components/PageTitle';
 import { FatLink, LogoBase } from '../components/shared';
 import routes from '../routes';
+import { createAccount, createAccountVariables } from '../__generated__/createAccount';
 
 const HeaderContainer = styled.div`
     display: flex;
@@ -76,13 +77,16 @@ const SignUp: React.FC = () => {
         mode: "onChange",
     });
 
-    const [ createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
+    const [ 
+        createAccount, 
+        { loading }
+    ] = useMutation<createAccount, createAccountVariables>(CREATE_ACCOUNT_MUTATION, {
         onCompleted: (data) => {
             const { createAccount: { status, error }} = data;
             const { username, password } = getValues();
             if (!status) {
                 return setError("result", {
-                    message: error
+                    message: error !== null ? error : "",
                 });
             };
             console.log(`onCompleted: sending ${username}, ${password} as a state`)
