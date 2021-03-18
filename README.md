@@ -12,7 +12,6 @@ Photo Gallery application for web built with React (TypeScripts)
 - [x] Page Helmet
 - [x] Login
 - [x] Sign Up
-- [x] Hook Form
 - [ ] Feed
 - [ ] Profile
 - [ ] Direct Message
