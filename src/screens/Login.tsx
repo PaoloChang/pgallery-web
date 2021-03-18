@@ -15,6 +15,7 @@ import PageTitle from "../components/PageTitle";
 import { gql, useMutation } from "@apollo/client";
 import { logUserIn } from "../apollo";
 import { useLocation } from "react-router";
+import { login, loginVariables } from "../__generated__/login";
 
 const FacebookLogin = styled.div`
     margin: 10px 0 20px;
@@ -68,12 +69,12 @@ const Login: React.FC = () => {
         }
     });
 
-    const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    const [login, { loading }] = useMutation<login, loginVariables>(LOGIN_MUTATION, {
         onCompleted: (data) => {
             const { login: { status, error, token } } = data;
             if (!status) {
                 return setError("result", {
-                    message: error,
+                    message: error !== null ? error : "",
                 })
             }
             if (token) {
@@ -82,9 +83,9 @@ const Login: React.FC = () => {
         }
     });
 
-    const onSubmitValid:SubmitHandler<IForm> = (data) => {
+    const onSubmitValid:SubmitHandler<IForm> = (params) => {
         if (loading) return
-        const { username, password } = data;
+        const { username, password } = params;
         login({
             variables: { username, password }
         })
