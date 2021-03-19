@@ -3,6 +3,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { client, darkModeVar, isLoggedInVar } from './apollo';
+import Layout from './components/Layout';
 import routes from './routes';
 import Home from './screens/Home';
 import Login from './screens/Login';
@@ -23,7 +24,9 @@ const App: React.FC = () => {
               <Switch>
                 <Route path={routes.home} exact>
                   { isLoggedIn ? (
-                    <Home />
+                    <Layout>
+                      <Home />
+                    </Layout>
                   ) : (
                     <Login />
                   ) }
