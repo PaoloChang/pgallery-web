@@ -8,10 +8,12 @@ const Input = styled.input<{ hasError: Boolean }>`
     border-radius: 3px;
     margin-top: 5px;
     box-sizing: border-box;
+    color: rgb(38, 38, 38);
     &::placeholder {
         font-size: 13px;
     }
     &:focus {
+        color: rgb(38, 38, 38);
         border-color: rgb(38, 38, 38);
     }
 `;

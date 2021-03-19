@@ -12,21 +12,18 @@ export const lightTheme = {
     fontColor: "rgb(38, 38, 38)",
     bgColor: "rgb(255, 255, 255)",
     accent: "rgb(0, 149, 246)",
-    borderColor: "rgb(219, 219, 219)"
+    borderColor: "rgb(219, 219, 219)",
 }
   
 export const darkTheme = {
     fontColor: "lightgray",
     bgColor: "#2c2c2c",
     accent: "rgb(0, 149, 246)",
-    borderColor: "rgb(219, 219, 219)"
+    borderColor: "rgb(219, 219, 219)",
 }
 
 export const GlobalStyles = createGlobalStyle`
     ${reset}
-    input {
-        all: unset;
-    }
     * {
         box-sizing: border-box;
     }
@@ -35,6 +32,9 @@ export const GlobalStyles = createGlobalStyle`
         color: ${props => props.theme.fontColor};
         font-size: 14px;
         font-family: 'Open Sans', sans-serif;
+    }
+    input {
+        all: unset;
     }
     a {
         text-decoration: none;
