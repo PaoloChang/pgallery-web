@@ -13,7 +13,7 @@ Photo Gallery application for web built with React (TypeScripts)
 - [x] Login
 - [x] Sign Up
 - [x] Dark Mode
+- [x] Header
 - [ ] Feed
 - [ ] Profile
 - [ ] Direct Message
-

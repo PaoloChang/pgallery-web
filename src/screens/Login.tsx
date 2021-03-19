@@ -58,9 +58,9 @@ const LOGIN_MUTATION = gql`
 
 const Login: React.FC = () => {
     const location = useLocation<ILocationState>();
-    console.log(location)
+    // console.log(location)
     const { 
-        register, handleSubmit, errors, formState, getValues, setError, clearErrors
+        register, handleSubmit, errors, formState, setError, clearErrors
     } = useForm<IForm>({
         mode: "onChange",
         defaultValues: {
