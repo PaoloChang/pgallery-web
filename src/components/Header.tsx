@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { isLoggedInVar } from "../apollo";
 import useUser from "../hooks/useUser";
 import routes from "../routes";
+import Avatar from "./Avatar";
 
 const StyledHeader = styled.header`
     width: 100%;
@@ -24,6 +25,11 @@ const Wrapper = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+`;
+
+const IconsContainer = styled.div`
+    display: flex;
     align-items: center;
 `;
 
@@ -52,32 +58,32 @@ const Button = styled.span`
 
 const Header: React.FC =() => {
     const isLoggedIn = useReactiveVar(isLoggedInVar);
-    const loggedInUser = useUser();
+    const { data } = useUser();
     return (
         <StyledHeader>
             <Wrapper>
                 <Column>
                     <FontAwesomeIcon icon={faInstagram} size="2x" />
                 </Column>
-                {isLoggedIn ? (
-                    <>
-                        <Column>
+                <Column>
+                    {isLoggedIn ? (
+                        <IconsContainer>
                             <Icon>
-                                <FontAwesomeIcon icon={faHome} size="lg" />
+                                <FontAwesomeIcon icon={faHome} size="2x" />
                             </Icon>
                             <Icon>
-                                <FontAwesomeIcon icon={faCompass} size="lg" />
+                                <FontAwesomeIcon icon={faCompass} size="2x" />
                             </Icon>
                             <Icon>
-                                <FontAwesomeIcon icon={faUser} size="lg" />
+                                <Avatar url={data?.seeMe?.avatar ? data?.seeMe?.avatar : ""} />
                             </Icon>
-                        </Column>
-                    </>
-                ) : (
-                    <Link to={routes.home}>
-                        <Button>Login</Button>
-                    </Link>
-                ) }
+                        </IconsContainer>
+                    ) : (
+                        <Link to={routes.home}>
+                            <Button>Login</Button>
+                        </Link>
+                    ) }
+                </Column>
             </Wrapper>
         </StyledHeader>
     )
