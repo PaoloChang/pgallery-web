@@ -5,6 +5,7 @@ import {
   faHeart,
   faPaperPlane,
 } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as SolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import { logUserOut } from '../apollo';
@@ -26,6 +27,7 @@ const FEED_QUERY = gql`
       comments
       createdAt
       isMine
+      isLiked
     }
   }
 `;
@@ -49,6 +51,8 @@ const Username = styled(FatText)`
 `;
 
 const PhotoImage = styled.img`
+  border-color: ${(props) => props.theme.borderColor};
+  max-width: 610px;
   min-width: 100%;
 `;
 
@@ -64,6 +68,9 @@ const PhotoActionControl = styled.div`
     display: flex;
     align-items: center;
   }
+  svg {
+    font-size: 30px;
+  }
 `;
 
 const PhotoAction = styled.div`
@@ -77,7 +84,6 @@ const Likes = styled(FatText)`
 
 const Home: React.FC = () => {
   const { data } = useQuery<seeFeed>(FEED_QUERY);
-  console.log(data);
   return (
     <div>
       {data?.seeFeed?.map((photo) => (
@@ -97,17 +103,20 @@ const Home: React.FC = () => {
             <PhotoActionControl>
               <div>
                 <PhotoAction>
-                  <FontAwesomeIcon size={'2x'} icon={faHeart} />
+                  <FontAwesomeIcon
+                    style={{ color: photo?.isLiked ? 'tomato' : 'inherit' }}
+                    icon={photo?.isLiked ? SolidHeart : faHeart}
+                  />
                 </PhotoAction>
                 <PhotoAction>
-                  <FontAwesomeIcon size={'2x'} icon={faComment} />
+                  <FontAwesomeIcon icon={faComment} />
                 </PhotoAction>
                 <PhotoAction>
-                  <FontAwesomeIcon size={'2x'} icon={faPaperPlane} />
+                  <FontAwesomeIcon icon={faPaperPlane} />
                 </PhotoAction>
               </div>
               <div>
-                <FontAwesomeIcon size={'2x'} icon={faBookmark} />
+                <FontAwesomeIcon icon={faBookmark} />
               </div>
             </PhotoActionControl>
             <Likes>
