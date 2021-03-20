@@ -13,7 +13,15 @@ Photo Gallery application for web built with React (TypeScripts)
 - [x] Login
 - [x] Sign Up
 - [x] Dark Mode
-- [x] Header, Icons, Avatar
-- [ ] Feed
+- [x] Header
+  - [x] Logo, Icons
+  - [x] Avatar
+- [x] Feed
+  - [x] Photo
+  - [x] Action Header
+  - [ ] Action
+  - [x] Display Likes
+  - [ ] Caption
+  - [ ] Comment Form
 - [ ] Profile
 - [ ] Direct Message
