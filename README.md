@@ -19,7 +19,7 @@ Photo Gallery application for web built with React (TypeScripts)
 - [x] Feed
   - [x] Photo
   - [x] Action Header
-    - [x] Action Like
+    - [x] Action Like (without refetching queries)
   - [x] Display Likes
   - [ ] Caption
   - [ ] Comment Form
