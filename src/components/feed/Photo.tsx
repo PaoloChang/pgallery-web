@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import Avatar from '../Avatar';
 import { FatText } from '../shared';
-import { seeFeed_seeFeed_user } from '../../__generated__/seeFeed';
+import { seeFeeds_seeFeeds_user } from '../../__generated__/seeFeeds';
 import { gql, useMutation } from '@apollo/client';
 
 const PhotoContainer = styled.div`
@@ -64,12 +64,12 @@ const Likes = styled(FatText)`
 `;
 
 interface IPhoto {
-  id: number | undefined;
-  user: seeFeed_seeFeed_user | undefined;
-  image: string | undefined;
-  isLiked: boolean | undefined;
-  likes: number | undefined;
-  caption: string | null | undefined;
+  id: number;
+  user: seeFeeds_seeFeeds_user;
+  image: string;
+  isLiked: boolean;
+  likes: number;
+  caption: string;
 }
 
 const TOGGLE_LIKE_MUTATION = gql`
@@ -89,19 +89,55 @@ const Photo: React.FC<IPhoto> = ({
   likes,
   caption,
 }) => {
-  const [toggleLikeMutation, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
+  const updateToggleLike = (cache: any, result: any) => {
+    const {
+      data: {
+        toggleLike: { status },
+      },
+    } = result;
+
+    if (status) {
+      const fragmentId = `Photo:${id}`;
+      const fragment = gql`
+        fragment UPDATE_TOGGLE_LIKE on Photo {
+          isLiked
+          likes
+        }
+      `;
+
+      const readResult = cache.readFragment({
+        id: fragmentId,
+        fragment: fragment,
+      });
+
+      if ('isLiked' in readResult && 'likes' in readResult) {
+        const { isLiked: cacheIsLiked, likes: cacheLikes } = readResult;
+        cache.writeFragment({
+          id: fragmentId,
+          fragment: fragment,
+          data: {
+            isLiked: !cacheIsLiked,
+            likes: cacheIsLiked ? cacheLikes - 1 : cacheLikes + 1,
+          },
+        });
+      }
+    }
+  };
+
+  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
       id,
     },
+    update: updateToggleLike,
   });
 
   return (
     <PhotoContainer key={id}>
       <PhotoHeader>
         <Avatar url={user?.avatar ? user.avatar : ''} lg={true} />
-        <Username>{user?.username}</Username>
+        <Username>{user.username}</Username>
       </PhotoHeader>
-      <PhotoImage alt={id ? id.toString() : ''} src={image ? image : ''} />
+      <PhotoImage alt={id.toString()} src={image} />
       <PhotoData>
         <PhotoActionControl>
           <div>

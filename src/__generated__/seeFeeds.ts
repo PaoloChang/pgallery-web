@@ -4,19 +4,19 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: seeFeed
+// GraphQL query operation: seeFeeds
 // ====================================================
 
-export interface seeFeed_seeFeed_user {
+export interface seeFeeds_seeFeeds_user {
   __typename: "User";
   username: string;
   avatar: string | null;
 }
 
-export interface seeFeed_seeFeed {
+export interface seeFeeds_seeFeeds {
   __typename: "Photo";
   id: number;
-  user: seeFeed_seeFeed_user;
+  user: seeFeeds_seeFeeds_user;
   image: string;
   caption: string | null;
   likes: number;
@@ -26,6 +26,6 @@ export interface seeFeed_seeFeed {
   isLiked: boolean;
 }
 
-export interface seeFeed {
-  seeFeed: (seeFeed_seeFeed | null)[] | null;
+export interface seeFeeds {
+  seeFeeds: (seeFeeds_seeFeeds | null)[] | null;
 }
