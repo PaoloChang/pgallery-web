@@ -2,7 +2,10 @@ import { gql, useQuery } from '@apollo/client';
 import { logUserOut } from '../apollo';
 import Photo from '../components/feed/Photo';
 import PageTitle from '../components/PageTitle';
-import { seeFeeds_seeFeeds_user } from '../__generated__/seeFeeds';
+import {
+  seeFeeds_seeFeeds_user,
+  seeFeeds_seeFeeds_comments,
+} from '../__generated__/seeFeeds';
 
 const FEED_QUERY = gql`
   query seeFeeds {
@@ -15,7 +18,17 @@ const FEED_QUERY = gql`
       image
       caption
       likes
-      comments
+      commentNumber
+      comments {
+        id
+        user {
+          username
+          avatar
+        }
+        payload
+        isMine
+        createdAt
+      }
       createdAt
       isMine
       isLiked
@@ -30,6 +43,8 @@ interface IFeed {
   isLiked: boolean;
   likes: number;
   caption: string;
+  commentNumber: number;
+  comments: seeFeeds_seeFeeds_comments;
 }
 
 interface IFeeds {
@@ -53,6 +68,8 @@ const Home: React.FC = () => {
               isLiked={photo.isLiked}
               likes={photo.likes}
               caption={photo.caption}
+              commentNumber={photo.commentNumber}
+              comments={photo.comments}
             />
           ))}
         <button onClick={() => logUserOut()}>Logout</button>

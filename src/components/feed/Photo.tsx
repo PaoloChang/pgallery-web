@@ -9,7 +9,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import Avatar from '../Avatar';
 import { FatText } from '../shared';
-import { seeFeeds_seeFeeds_user } from '../../__generated__/seeFeeds';
+import {
+  seeFeeds_seeFeeds_user,
+  seeFeeds_seeFeeds_comments,
+} from '../../__generated__/seeFeeds';
 import { gql, useMutation } from '@apollo/client';
 
 const PhotoContainer = styled.div`
@@ -63,6 +66,24 @@ const Likes = styled(FatText)`
   margin-top: 10px;
 `;
 
+const Comments = styled.div`
+  margin-top: 20px;
+`;
+
+const Comment = styled.div``;
+
+const CommentCaption = styled.span`
+  margin-left: 10px;
+`;
+
+const CommentCount = styled.span`
+  display: block;
+  opacity: 0.7;
+  margin: 10px 0;
+  font-weight: 700;
+  font-size: 12px;
+`;
+
 interface IPhoto {
   id: number;
   user: seeFeeds_seeFeeds_user;
@@ -70,6 +91,8 @@ interface IPhoto {
   isLiked: boolean;
   likes: number;
   caption: string;
+  commentNumber: number;
+  comments: seeFeeds_seeFeeds_comments;
 }
 
 const TOGGLE_LIKE_MUTATION = gql`
@@ -88,6 +111,8 @@ const Photo: React.FC<IPhoto> = ({
   isLiked,
   likes,
   caption,
+  commentNumber,
+  comments,
 }) => {
   const updateToggleLike = (cache: any, result: any) => {
     const {
@@ -159,7 +184,15 @@ const Photo: React.FC<IPhoto> = ({
           </div>
         </PhotoActionControl>
         <Likes>{likes === 1 ? '1 like' : `${likes} likes`}</Likes>
-        {caption}
+        <Comments>
+          <Comment>
+            <FatText>{user.username}</FatText>
+            <CommentCaption>{caption}</CommentCaption>
+          </Comment>
+          <CommentCount>
+            {commentNumber === 1 ? '1 comment' : `${commentNumber} comments`}
+          </CommentCount>
+        </Comments>
       </PhotoData>
     </PhotoContainer>
   );
