@@ -109,30 +109,45 @@ const Photo: React.FC<IPhoto> = ({
     } = result;
 
     if (status) {
-      const fragmentId = `Photo:${id}`;
-      const fragment = gql`
-        fragment UPDATE_TOGGLE_LIKE on Photo {
-          isLiked
-          likes
-        }
-      `;
+      const photoId = `Photo:${id}`;
+      // const fragment = gql`
+      //   fragment UPDATE_TOGGLE_LIKE on Photo {
+      //     isLiked
+      //     likes
+      //   }
+      // `;
 
-      const readResult = cache.readFragment({
-        id: fragmentId,
-        fragment: fragment,
-      });
+      // const readResult = cache.readFragment({
+      //   id: photoId,
+      //   fragment: fragment,
+      // });
 
-      if ('isLiked' in readResult && 'likes' in readResult) {
-        const { isLiked: cacheIsLiked, likes: cacheLikes } = readResult;
-        cache.writeFragment({
-          id: fragmentId,
-          fragment: fragment,
-          data: {
-            isLiked: !cacheIsLiked,
-            likes: cacheIsLiked ? cacheLikes - 1 : cacheLikes + 1,
+      // if ('isLiked' in readResult && 'likes' in readResult) {
+      //   const { isLiked: cacheIsLiked, likes: cacheLikes } = readResult;
+      //   cache.writeFragment({
+      //     id: photoId,
+      //     fragment: fragment,
+      //     data: {
+      //       isLiked: !cacheIsLiked,
+      //       likes: cacheIsLiked ? cacheLikes - 1 : cacheLikes + 1,
+      //     },
+      //   });
+      // }
+
+      cache.modify({
+        id: photoId,
+        fields: {
+          isLiked(prev: boolean) {
+            return !prev;
           },
-        });
-      }
+          likes(prev: number) {
+            if (isLiked) {
+              return prev - 1;
+            }
+            return prev + 1;
+          },
+        },
+      });
     }
   };
 
