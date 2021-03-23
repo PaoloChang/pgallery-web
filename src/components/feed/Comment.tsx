@@ -39,6 +39,10 @@ const Comment: React.FC<IComment> = ({ author, payload }) => {
               <React.Fragment key={index}>
                 <Link to={`/hashtags/${word}`}>{word}</Link>{' '}
               </React.Fragment>
+            ) : /@[\w]+/.test(word) ? (
+              <React.Fragment key={index}>
+                <Link to={`/mention/${word}`}>{word}</Link>{' '}
+              </React.Fragment>
             ) : (
               <React.Fragment key={index}>{word} </React.Fragment>
             ),
