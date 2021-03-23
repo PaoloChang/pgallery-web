@@ -187,6 +187,7 @@ const Photo: React.FC<IPhoto> = ({
         </PhotoActionControl>
         <Likes>{likes === 1 ? '1 like' : `${likes} likes`}</Likes>
         <Comments
+          photoId={id}
           author={user.username}
           caption={caption}
           commentNumber={commentNumber}
