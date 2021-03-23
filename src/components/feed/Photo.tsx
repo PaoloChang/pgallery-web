@@ -11,9 +11,10 @@ import Avatar from '../Avatar';
 import { FatText } from '../shared';
 import {
   seeFeeds_seeFeeds_user,
-  seeFeeds_seeFeeds_comments,
+  seeFeeds_seeFeeds_comments_user,
 } from '../../__generated__/seeFeeds';
 import { gql, useMutation } from '@apollo/client';
+import Comments from './Comments';
 
 const PhotoContainer = styled.div`
   background-color: white;
@@ -66,24 +67,6 @@ const Likes = styled(FatText)`
   margin-top: 10px;
 `;
 
-const Comments = styled.div`
-  margin-top: 20px;
-`;
-
-const Comment = styled.div``;
-
-const CommentCaption = styled.span`
-  margin-left: 10px;
-`;
-
-const CommentCount = styled.span`
-  display: block;
-  opacity: 0.7;
-  margin: 10px 0;
-  font-weight: 700;
-  font-size: 12px;
-`;
-
 interface IPhoto {
   id: number;
   user: seeFeeds_seeFeeds_user;
@@ -92,7 +75,11 @@ interface IPhoto {
   likes: number;
   caption: string;
   commentNumber: number;
-  comments: seeFeeds_seeFeeds_comments;
+  comments: Array<{
+    id: number;
+    user: seeFeeds_seeFeeds_comments_user;
+    payload: string;
+  }>;
 }
 
 const TOGGLE_LIKE_MUTATION = gql`
@@ -184,15 +171,12 @@ const Photo: React.FC<IPhoto> = ({
           </div>
         </PhotoActionControl>
         <Likes>{likes === 1 ? '1 like' : `${likes} likes`}</Likes>
-        <Comments>
-          <Comment>
-            <FatText>{user.username}</FatText>
-            <CommentCaption>{caption}</CommentCaption>
-          </Comment>
-          <CommentCount>
-            {commentNumber === 1 ? '1 comment' : `${commentNumber} comments`}
-          </CommentCount>
-        </Comments>
+        <Comments
+          author={user.username}
+          caption={caption}
+          commentNumber={commentNumber}
+          comments={comments}
+        />
       </PhotoData>
     </PhotoContainer>
   );
