@@ -4,7 +4,7 @@ import Photo from '../components/feed/Photo';
 import PageTitle from '../components/PageTitle';
 import {
   seeFeeds_seeFeeds_user,
-  seeFeeds_seeFeeds_comments,
+  seeFeeds_seeFeeds_comments_user,
 } from '../__generated__/seeFeeds';
 
 const FEED_QUERY = gql`
@@ -44,7 +44,11 @@ interface IFeed {
   likes: number;
   caption: string;
   commentNumber: number;
-  comments: seeFeeds_seeFeeds_comments;
+  comments: Array<{
+    id: number;
+    user: seeFeeds_seeFeeds_comments_user;
+    payload: string;
+  }>;
 }
 
 interface IFeeds {
