@@ -48,6 +48,7 @@ interface IFeed {
     id: number;
     user: seeFeeds_seeFeeds_comments_user;
     payload: string;
+    isMine: boolean;
   }>;
 }
 

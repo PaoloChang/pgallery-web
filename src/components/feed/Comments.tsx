@@ -50,6 +50,7 @@ interface IComments {
     id: number;
     user: seeFeeds_seeFeeds_comments_user;
     payload: string;
+    isMine: boolean;
   }>;
 }
 
@@ -153,8 +154,11 @@ const Comments: React.FC<IComments> = ({
       {comments?.map((comment) => (
         <Comment
           key={comment.id}
+          photoId={photoId}
+          id={comment.id}
           author={comment.user.username}
           payload={comment.payload}
+          isMine={comment.isMine}
         />
       ))}
       <Separator />
