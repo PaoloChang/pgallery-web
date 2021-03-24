@@ -19,3 +19,9 @@ export const FatText = styled.span`
   font-weight: 600;
   color: rgb(32, 32, 32);
 `;
+
+export const Separator = styled.div`
+  margin: 15px 0 10px;
+  border-top: 1px solid ${(props) => props.theme.borderColor};
+  height: 1px;
+`;

@@ -2,7 +2,9 @@ import { gql, useMutation } from '@apollo/client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
+import useUser from '../../hooks/useUser';
 import { seeFeeds_seeFeeds_comments_user } from '../../__generated__/seeFeeds';
+import { Separator } from '../shared';
 import Comment from './Comment';
 
 const Container = styled.div`
@@ -19,13 +21,21 @@ const CommentCount = styled.span`
 
 const CommentForm = styled.form``;
 const CommentInput = styled.input`
-  width: 100%;
+  width: 98%;
+  padding: 6px;
+  border: 1px solid ${(props) => props.theme.borderColor};
+  border-radius: 4px;
+  &:focus {
+    box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.01),
+      0px 0px 8px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const CREATE_COMMENT_MUTATION = gql`
   mutation createComment($photoId: Int!, $payload: String!) {
     createComment(photoId: $photoId, payload: $payload) {
       status
+      id
       error
     }
   }
@@ -50,15 +60,49 @@ const Comments: React.FC<IComments> = ({
   commentNumber,
   comments,
 }) => {
-  const { register, handleSubmit, setValue } = useForm();
-
+  const { data: userData } = useUser();
+  const { register, handleSubmit, setValue, getValues } = useForm();
   const [createCommentMutaton, { loading }] = useMutation(
     CREATE_COMMENT_MUTATION,
+    {
+      update: (cache, response) => {
+        const { payload } = getValues();
+        setValue('payload', '');
+        let newComment = {};
+        const {
+          data: {
+            createComment: { status, id },
+          },
+        } = response;
+        if (status && userData?.seeMe) {
+          newComment = {
+            id,
+            __typename: 'Comment',
+            createAt: Date.now(),
+            payload,
+            isMine: true,
+            user: {
+              ...userData.seeMe,
+            },
+          };
+        }
+        cache.modify({
+          id: `Photo:${photoId}`,
+          fields: {
+            comments(prev) {
+              return [...prev, newComment];
+            },
+            commentNumber(prev) {
+              return prev + 1;
+            },
+          },
+        });
+      },
+    },
   );
 
   const onValid = (data: any) => {
     const { payload } = data;
-    // console.log(`photoId: ${photoId}, payload: ${payload}`);
     if (loading) return;
     createCommentMutaton({
       variables: {
@@ -66,7 +110,6 @@ const Comments: React.FC<IComments> = ({
         payload,
       },
     });
-    setValue('payload', '');
   };
 
   return (
@@ -82,6 +125,7 @@ const Comments: React.FC<IComments> = ({
           payload={comment.payload}
         />
       ))}
+      <Separator />
       <CommentForm action="" onSubmit={handleSubmit(onValid)}>
         <CommentInput
           name="payload"

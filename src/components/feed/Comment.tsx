@@ -6,7 +6,7 @@ import { FatText } from '../shared';
 const Container = styled.div``;
 
 const CommentLine = styled.div`
-  padding: 2px 0;
+  padding: 4px 0;
 `;
 
 const CommentCaption = styled.span`
