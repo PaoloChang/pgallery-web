@@ -86,6 +86,38 @@ const Comments: React.FC<IComments> = ({
             },
           };
         }
+
+        // /**
+        //  * FEED 11.18: Create Comment
+        //  * In Photo${#}: comments: [], created comment,
+        //  * newly added comment didn't have reference
+        //  * but newComment object
+        //  *
+        //  * cache.writeFragment() will help adding reference
+        //  * to be able to work with delete function
+        //  * In order to apply this, simply replace
+        //  * newComment to newCommentCache in the array of
+        //  * fields: comments return
+        //  *
+        //  * However, current apollo version seems working
+        //  * without using cache.writeFragment()
+        //  */
+        // const newCommentCache = cache.writeFragment({
+        //   fragment: gql`
+        //     fragment BSName on Comment {
+        //       id
+        //       createdAt
+        //       isMine
+        //       payload
+        //       user {
+        //         username
+        //         avatar
+        //       }
+        //     }
+        //   `,
+        //   data: newComment,
+        // });
+
         cache.modify({
           id: `Photo:${photoId}`,
           fields: {
