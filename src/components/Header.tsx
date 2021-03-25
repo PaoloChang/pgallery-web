@@ -74,10 +74,12 @@ const Header: React.FC = () => {
                 <FontAwesomeIcon icon={faCompass} size="2x" />
               </Icon>
               <Icon>
-                <Avatar
-                  url={data?.seeMe?.avatar ? data?.seeMe?.avatar : ''}
-                  lg={false}
-                />
+                <Link to={`/user/${data?.seeMe.username}`}>
+                  <Avatar
+                    url={data?.seeMe?.avatar ? data?.seeMe?.avatar : ''}
+                    lg={false}
+                  />
+                </Link>
               </Icon>
             </IconsContainer>
           ) : (

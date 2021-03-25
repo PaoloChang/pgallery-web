@@ -23,20 +23,21 @@ export const darkTheme = {
 };
 
 export const GlobalStyles = createGlobalStyle`
-    ${reset}
-    * {
-        box-sizing: border-box;
-    }
-    body {
-        background-color: ${(props) => props.theme.bgColor};
-        color: ${(props) => props.theme.fontColor};
-        font-size: 14px;
-        font-family: 'Open Sans', sans-serif;
-    }
-    input {
-        all: unset;
-    }
-    a {
-        text-decoration: none;
-    }
+  ${reset}
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: ${(props) => props.theme.bgColor};
+    color: ${(props) => props.theme.fontColor};
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+  }
+  input {
+    all: unset;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 `;

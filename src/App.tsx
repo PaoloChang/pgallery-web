@@ -8,6 +8,7 @@ import routes from './routes';
 import Home from './screens/Home';
 import Login from './screens/Login';
 import NotFound from './screens/NotFound';
+import Profile from './screens/Profile';
 import SignUp from './screens/SignUp';
 import { darkTheme, lightTheme, GlobalStyles } from './styles';
 
@@ -16,29 +17,32 @@ const App: React.FC = () => {
   const darkMode = useReactiveVar(darkModeVar);
   return (
     <>
-      <ApolloProvider client={client} >
+      <ApolloProvider client={client}>
         <HelmetProvider>
-          <ThemeProvider theme={ darkMode ? darkTheme : lightTheme }>
+          <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
             <GlobalStyles />
             <Router>
               <Switch>
                 <Route path={routes.home} exact>
-                  { isLoggedIn ? (
+                  {isLoggedIn ? (
                     <Layout>
                       <Home />
                     </Layout>
                   ) : (
                     <Login />
-                  ) }
+                  )}
                 </Route>
                 {/* Public ONLY route */}
                 {!isLoggedIn ? (
                   <Route path={routes.signUp}>
-                    <SignUp/>
+                    <SignUp />
                   </Route>
-                ) : null }
+                ) : null}
+                <Route path={`/user/:username`}>
+                  <Profile />
+                </Route>
                 <Route>
-                  <NotFound/>
+                  <NotFound />
                 </Route>
               </Switch>
             </Router>
@@ -47,6 +51,6 @@ const App: React.FC = () => {
       </ApolloProvider>
     </>
   );
-}
+};
 
 export default App;

@@ -2,6 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import { logUserOut } from '../apollo';
 import Photo from '../components/feed/Photo';
 import PageTitle from '../components/PageTitle';
+import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from '../fragments';
 import {
   seeFeeds_seeFeeds_user,
   seeFeeds_seeFeeds_comments_user,
@@ -10,30 +11,21 @@ import {
 const FEED_QUERY = gql`
   query seeFeeds {
     seeFeeds {
-      id
+      ...PhotoFragment
       user {
         username
         avatar
       }
-      image
       caption
-      likes
-      commentNumber
       comments {
-        id
-        user {
-          username
-          avatar
-        }
-        payload
-        isMine
-        createdAt
+        ...CommentFragment
       }
       createdAt
       isMine
-      isLiked
     }
   }
+  ${PHOTO_FRAGMENT}
+  ${COMMENT_FRAGMENT}
 `;
 
 interface IFeed {
