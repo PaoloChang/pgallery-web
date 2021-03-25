@@ -15,6 +15,7 @@ import {
 } from '../../__generated__/seeFeeds';
 import { gql, useMutation } from '@apollo/client';
 import Comments from './Comments';
+import { Link } from 'react-router-dom';
 
 const PhotoContainer = styled.div`
   background-color: white;
@@ -162,8 +163,12 @@ const Photo: React.FC<IPhoto> = ({
   return (
     <PhotoContainer key={id}>
       <PhotoHeader>
-        <Avatar url={user?.avatar ? user.avatar : ''} lg={true} />
-        <Username>{user.username}</Username>
+        <Link to={`/user/${user.username}`}>
+          <Avatar url={user?.avatar ? user.avatar : ''} lg={true} />
+        </Link>
+        <Link to={`/user/${user.username}`}>
+          <Username>{user.username}</Username>
+        </Link>
       </PhotoHeader>
       <PhotoImage alt={id.toString()} src={image} />
       <PhotoData>

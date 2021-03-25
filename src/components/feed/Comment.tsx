@@ -89,16 +89,22 @@ const Comment: React.FC<IComment> = ({
   return (
     <Container>
       <CommentLine>
-        <FatText>{author}</FatText>
+        <Link to={`/user/${author}`}>
+          <FatText>{author}</FatText>
+        </Link>
         <CommentCaption>
           {payload.split(' ').map((word, index) =>
             /#[\w]+/.test(word) ? (
               <React.Fragment key={index}>
-                <Link to={`/hashtags/${word}`}>{word}</Link>{' '}
+                <Link to={`/hashtags/${word.substring(1, word.length)}`}>
+                  {word}
+                </Link>{' '}
               </React.Fragment>
             ) : /@[\w]+/.test(word) ? (
               <React.Fragment key={index}>
-                <Link to={`/mention/${word}`}>{word}</Link>{' '}
+                <Link to={`/user/${word.substring(1, word.length)}`}>
+                  {word}
+                </Link>{' '}
               </React.Fragment>
             ) : (
               <React.Fragment key={index}>{word} </React.Fragment>
