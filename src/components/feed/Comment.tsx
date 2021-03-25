@@ -1,7 +1,5 @@
 import { gql, useMutation } from '@apollo/client';
-// import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FaRegTimesCircle } from 'react-icons/fa';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -26,7 +24,10 @@ const CommentCaption = styled.span`
   }
 `;
 
-const DeleteButton = styled.span`
+const DeleteButton = styled(FaRegTimesCircle)`
+  position: relative;
+  top: 2px;
+  left: 4px;
   cursor: pointer;
   color: #8e8e8e;
 `;
@@ -104,11 +105,7 @@ const Comment: React.FC<IComment> = ({
             ),
           )}
         </CommentCaption>
-        {isMine ? (
-          <DeleteButton onClick={onClickDelete}>
-            <FontAwesomeIcon icon={faTimesCircle} />
-          </DeleteButton>
-        ) : null}
+        {isMine ? <DeleteButton onClick={onClickDelete} /> : null}
       </CommentLine>
     </Container>
   );

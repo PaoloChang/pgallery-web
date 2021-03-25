@@ -25,6 +25,7 @@
     "react-dom": "^17.0.1",
     "react-helmet-async": "^1.0.9",
     "react-hook-form": "^6.15.4",
+    "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "styled-components": "^5.2.1",
@@ -37,7 +38,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "codegen": "apollo client:codegen src/__generated__ --target=typescript --outputFlat" 
+    "codegen": "apollo client:codegen src/__generated__ --target=typescript --outputFlat"
   },
   "eslintConfig": {
     "extends": [
