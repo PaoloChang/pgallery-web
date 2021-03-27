@@ -39,7 +39,9 @@ const App: React.FC = () => {
                   </Route>
                 ) : null}
                 <Route path={`/user/:username`}>
-                  <Profile />
+                  <Layout>
+                    <Profile />
+                  </Layout>
                 </Route>
                 <Route>
                   <NotFound />
