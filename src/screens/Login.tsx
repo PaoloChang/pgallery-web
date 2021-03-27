@@ -34,6 +34,10 @@ const Notification = styled.div`
   color: #2ecc71;
 `;
 
+const LoginBtn = styled(Button)`
+  margin-top: 15px;
+`;
+
 interface ILocationState {
   message: string;
   username: string;
@@ -142,7 +146,7 @@ const Login: React.FC = () => {
           />
           <FormError message={errors?.password?.message} />
           <FormError message={errors?.result?.message} />
-          <Button
+          <LoginBtn
             type="submit"
             value={loading ? 'Loading...' : 'Log in'}
             disabled={!formState.isValid || loading}

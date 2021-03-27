@@ -41,6 +41,10 @@ const Logo = styled(LogoBase)`
   font-size: 25px;
 `;
 
+const SButton = styled(Button)`
+  margin-top: 15px;
+`;
+
 interface IForm {
   firstName: string;
   lastName: string;
@@ -135,7 +139,7 @@ const SignUp: React.FC = () => {
           <Subtitle>
             Sign up to see photos and videos from your friends.
           </Subtitle>
-          <Button type="submit" value="Log in with Facebook" />
+          <SButton type="submit" value="Log in with Facebook" />
           <Separator />
         </HeaderContainer>
         <form onSubmit={handleSubmit(onSubmitValid)}>
@@ -197,7 +201,7 @@ const SignUp: React.FC = () => {
           />
           <FormError message={errors?.password?.message} />
           <FormError message={errors?.result?.message} />
-          <Button
+          <SButton
             type="submit"
             value={loading ? 'Loading...' : 'Sign up'}
             disabled={!formState.isValid || loading}

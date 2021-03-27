@@ -23,5 +23,6 @@ Photo Gallery application for web built with React (TypeScripts)
   - [x] Display Likes
   - [x] Caption
   - [x] Comment Form
-- [ ] Profile
+- [x] Profile
+  - [x] Follow & Unfollow User
 - [ ] Direct Message
