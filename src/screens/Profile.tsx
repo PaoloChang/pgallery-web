@@ -1,8 +1,8 @@
 import React from 'react';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { PHOTO_FRAGMENT } from '../fragments';
-import { SEE_ME_QUERY } from '../hooks/useUser';
+import useUser from '../hooks/useUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faHeart } from '@fortawesome/free-regular-svg-icons';
 import { FatText } from '../components/shared';
@@ -159,28 +159,78 @@ interface IParams {
 
 const Profile: React.FC = () => {
   const { username } = useParams<IParams>();
+  const { data: userData } = useUser();
+  const client = useApolloClient();
   const { data, loading } = useQuery<ISeeProfile>(SEE_PROFILE_QUERY, {
     variables: {
       username,
     },
   });
+
   const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      { query: SEE_PROFILE_QUERY, variables: { username } },
-      { query: SEE_ME_QUERY },
-    ],
+    onCompleted: (data) => {
+      const {
+        followUser: { status },
+      } = data;
+      if (!status) return;
+      const { cache } = client;
+      cache.modify({
+        id: `User:${username}`,
+        fields: {
+          isFollowing(prev) {
+            return !prev;
+          },
+          totalFollowers(prev) {
+            return prev + 1;
+          },
+        },
+      });
+      cache.modify({
+        id: `User:${userData?.seeMe.username}`,
+        fields: {
+          totalFollowing(prev) {
+            return prev + 1;
+          },
+        },
+      });
+    },
   });
+
   const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      { query: SEE_PROFILE_QUERY, variables: { username } },
-      { query: SEE_ME_QUERY },
-    ],
+    update: (cache, result) => {
+      const {
+        data: {
+          unfollowUser: { status },
+        },
+      } = result;
+      if (!status) return;
+      cache.modify({
+        id: `User:${username}`,
+        fields: {
+          isFollowing(prev) {
+            return !prev;
+          },
+          totalFollowers(prev) {
+            return prev - 1;
+          },
+        },
+      });
+
+      cache.modify({
+        id: `User:${userData?.seeMe.username}`,
+        fields: {
+          totalFollowing(prev) {
+            return prev - 1;
+          },
+        },
+      });
+    },
   });
 
   const getButton = (seeProfile: IProfile) => {

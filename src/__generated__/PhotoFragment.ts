@@ -4,18 +4,14 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: seeMe
+// GraphQL fragment: PhotoFragment
 // ====================================================
 
-export interface seeMe_seeMe {
-  __typename: "User";
+export interface PhotoFragment {
+  __typename: "Photo";
   id: number;
-  username: string;
-  avatar: string | null;
-  totalFollowing: number;
-  totalFollowers: number;
-}
-
-export interface seeMe {
-  seeMe: seeMe_seeMe | null;
+  image: string;
+  likes: number;
+  commentNumber: number;
+  isLiked: boolean;
 }

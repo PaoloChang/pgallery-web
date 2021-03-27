@@ -4,18 +4,20 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: seeMe
+// GraphQL fragment: CommentFragment
 // ====================================================
 
-export interface seeMe_seeMe {
+export interface CommentFragment_user {
   __typename: "User";
-  id: number;
   username: string;
   avatar: string | null;
-  totalFollowing: number;
-  totalFollowers: number;
 }
 
-export interface seeMe {
-  seeMe: seeMe_seeMe | null;
+export interface CommentFragment {
+  __typename: "Comment";
+  id: number;
+  user: CommentFragment_user;
+  payload: string;
+  isMine: boolean;
+  createdAt: string;
 }
