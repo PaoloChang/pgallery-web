@@ -17,7 +17,7 @@ export const FatLink = styled.span`
 
 export const FatText = styled.span`
   font-weight: 600;
-  color: rgb(32, 32, 32);
+  color: ${(props) => props.theme.fontColor}; //rgb(32, 32, 32);
 `;
 
 export const Separator = styled.div`
