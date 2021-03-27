@@ -4,21 +4,19 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: createComment
+// GraphQL mutation operation: deleteComment
 // ====================================================
 
-export interface createComment_createComment {
+export interface deleteComment_deleteComment {
   __typename: "MutationResponse";
   status: boolean;
-  id: number | null;
   error: string | null;
 }
 
-export interface createComment {
-  createComment: createComment_createComment;
+export interface deleteComment {
+  deleteComment: deleteComment_deleteComment;
 }
 
-export interface createCommentVariables {
-  photoId: number;
-  payload: string;
+export interface deleteCommentVariables {
+  id: number;
 }

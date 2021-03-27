@@ -4,21 +4,19 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: createComment
+// GraphQL mutation operation: unfollowUser
 // ====================================================
 
-export interface createComment_createComment {
+export interface unfollowUser_unfollowUser {
   __typename: "MutationResponse";
   status: boolean;
-  id: number | null;
   error: string | null;
 }
 
-export interface createComment {
-  createComment: createComment_createComment;
+export interface unfollowUser {
+  unfollowUser: unfollowUser_unfollowUser;
 }
 
-export interface createCommentVariables {
-  photoId: number;
-  payload: string;
+export interface unfollowUserVariables {
+  username: string;
 }
