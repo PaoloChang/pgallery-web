@@ -1,11 +1,14 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { PHOTO_FRAGMENT } from '../fragments';
+import { SEE_ME_QUERY } from '../hooks/useUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faHeart } from '@fortawesome/free-regular-svg-icons';
 import { FatText } from '../components/shared';
 import styled from 'styled-components';
+import Button from '../components/auth/Button';
+import PageTitle from '../components/PageTitle';
 
 const Header = styled.div`
   display: flex;
@@ -25,6 +28,7 @@ const Username = styled.h3`
 const Row = styled.div`
   margin-bottom: 20px;
   font-size: 16px;
+  display: flex;
 `;
 const List = styled.ul`
   display: flex;
@@ -77,6 +81,14 @@ const Icon = styled.span`
     margin-right: 5px;
   }
 `;
+const ProfileBtn = styled(Button).attrs({
+  as: 'span',
+})`
+  margin-left: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  cursor: pointer;
+`;
 
 const SEE_PROFILE_QUERY = gql`
   query seeProfile($username: String!) {
@@ -97,6 +109,24 @@ const SEE_PROFILE_QUERY = gql`
     }
   }
   ${PHOTO_FRAGMENT}
+`;
+
+const FOLLOW_USER_MUTATION = gql`
+  mutation followUser($username: String!) {
+    followUser(username: $username) {
+      status
+      error
+    }
+  }
+`;
+
+const UNFOLLOW_USER_MUTATION = gql`
+  mutation unfollowUser($username: String!) {
+    unfollowUser(username: $username) {
+      status
+      error
+    }
+  }
 `;
 
 interface IProfile {
@@ -129,19 +159,51 @@ interface IParams {
 
 const Profile: React.FC = () => {
   const { username } = useParams<IParams>();
-  const { data } = useQuery<ISeeProfile>(SEE_PROFILE_QUERY, {
+  const { data, loading } = useQuery<ISeeProfile>(SEE_PROFILE_QUERY, {
     variables: {
       username,
     },
   });
+  const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
+    variables: {
+      username,
+    },
+    refetchQueries: [
+      { query: SEE_PROFILE_QUERY, variables: { username } },
+      { query: SEE_ME_QUERY },
+    ],
+  });
+  const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
+    variables: {
+      username,
+    },
+    refetchQueries: [
+      { query: SEE_PROFILE_QUERY, variables: { username } },
+      { query: SEE_ME_QUERY },
+    ],
+  });
+
+  const getButton = (seeProfile: IProfile) => {
+    const { isMine, isFollowing } = seeProfile;
+    if (isMine) return <ProfileBtn>Edit Profile</ProfileBtn>;
+    else if (isFollowing)
+      return <ProfileBtn onClick={() => unfollowUser()}>Unfollow</ProfileBtn>;
+    else return <ProfileBtn onClick={() => followUser()}>Follow</ProfileBtn>;
+  };
 
   return (
     <div>
+      <PageTitle
+        title={
+          loading ? 'Loading...' : `${data?.seeProfile.username}'s Profile`
+        }
+      />
       <Header>
         <Avatar src={data ? data.seeProfile.avatar : ''} />
         <Column>
           <Row>
             <Username>{data?.seeProfile.username}</Username>
+            {data?.seeProfile ? getButton(data.seeProfile) : null}
           </Row>
           <Row>
             <List>
