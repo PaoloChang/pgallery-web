@@ -1,8 +1,8 @@
 import { useReactiveVar } from '@apollo/client';
-import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { faCompass } from '@fortawesome/free-regular-svg-icons';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { LogoBase } from './shared';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { isLoggedInVar } from '../apollo';
@@ -26,6 +26,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+const Logo = styled(LogoBase)`
+  font-size: 25px;
 `;
 
 const IconsContainer = styled.div`
@@ -63,7 +67,7 @@ const Header: React.FC = () => {
       <Wrapper>
         <Column>
           <Link to={routes.home}>
-            <FontAwesomeIcon icon={faInstagram} size="2x" />
+            <Logo>PGallery</Logo>
           </Link>
         </Column>
         <Column>
