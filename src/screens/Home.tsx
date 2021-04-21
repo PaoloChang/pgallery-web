@@ -1,4 +1,6 @@
 import { gql, useQuery } from '@apollo/client';
+import { AnyARecord } from 'node:dns';
+import { useEffect, useRef } from 'react';
 import { logUserOut } from '../apollo';
 import Photo from '../components/feed/Photo';
 import PageTitle from '../components/PageTitle';
@@ -9,8 +11,8 @@ import {
 } from '../__generated__/seeFeeds';
 
 const FEED_QUERY = gql`
-  query seeFeeds {
-    seeFeeds {
+  query seeFeed {
+    seeFeed {
       ...PhotoFragment
       user {
         username
@@ -45,18 +47,44 @@ interface IFeed {
 }
 
 interface IFeeds {
-  seeFeeds: IFeed[];
+  seeFeed: IFeed[];
 }
 
 const Home: React.FC = () => {
-  const { data } = useQuery<IFeeds>(FEED_QUERY);
+  const { data, fetchMore } = useQuery<IFeeds>(FEED_QUERY);
   //   const feed = data?.seeFeed;
+  const feedRef = useRef<null | HTMLDivElement>(null);
+
+  const handleScroll = (e: React.UIEvent<HTMLElement>): void => {
+    const bottom =
+      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
+      e.currentTarget.scrollHeight;
+
+    console.log(e.currentTarget.scrollHeight);
+    if (bottom) {
+      console.log('At The Bottom'); //Add in what you want here
+    }
+  };
+
+  useEffect(() => {
+    if (
+      feedRef.current?.scrollIntoView({
+        inline: 'end',
+      })
+    ) {
+      console.log('END OF SCREEN');
+    }
+  }, [feedRef]);
+
   return (
     <>
       <PageTitle title="Home" />
-      <div>
+      <div
+        // ref={feedRef}
+        onScroll={() => console.log('Scrolling')}
+      >
         {data &&
-          data.seeFeeds?.map((photo) => (
+          data.seeFeed?.map((photo) => (
             <Photo
               key={photo.id}
               id={photo.id}
