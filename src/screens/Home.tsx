@@ -1,18 +1,17 @@
+import React, { useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { AnyARecord } from 'node:dns';
-import { useEffect, useRef } from 'react';
 import { logUserOut } from '../apollo';
+import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from '../fragments';
 import Photo from '../components/feed/Photo';
 import PageTitle from '../components/PageTitle';
-import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from '../fragments';
 import {
   seeFeeds_seeFeeds_user,
   seeFeeds_seeFeeds_comments_user,
 } from '../__generated__/seeFeeds';
 
 const FEED_QUERY = gql`
-  query seeFeed {
-    seeFeed {
+  query seeFeed($offset: Int) {
+    seeFeed(offset: $offset) {
       ...PhotoFragment
       user {
         username
@@ -51,38 +50,65 @@ interface IFeeds {
 }
 
 const Home: React.FC = () => {
-  const { data, fetchMore } = useQuery<IFeeds>(FEED_QUERY);
-  //   const feed = data?.seeFeed;
-  const feedRef = useRef<null | HTMLDivElement>(null);
-
-  const handleScroll = (e: React.UIEvent<HTMLElement>): void => {
-    const bottom =
-      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
-      e.currentTarget.scrollHeight;
-
-    console.log(e.currentTarget.scrollHeight);
-    if (bottom) {
-      console.log('At The Bottom'); //Add in what you want here
-    }
-  };
+  const { data, fetchMore } = useQuery<IFeeds>(FEED_QUERY, {
+    variables: {
+      offset: 0,
+    },
+    onCompleted: (data) => {
+      console.log(`Home / useQuery / onCompleted`);
+      console.log(data);
+    },
+    onError: (e) => {
+      console.log(`Home / useQuery / onError`);
+      console.log(e);
+    },
+  });
 
   useEffect(() => {
-    if (
-      feedRef.current?.scrollIntoView({
-        inline: 'end',
-      })
-    ) {
-      console.log('END OF SCREEN');
-    }
-  }, [feedRef]);
+    const handleScroll = (e: any) => {
+      // console.log(`Header / handleScroll`);
+      // console.log(e);
+      // const bottom =
+      //   e.currentTarget.scrollHeight - e.currentTarget.scrollTop >=
+      //   e.currentTarget.scrollHeight;
+
+      const diff =
+        e.target.scrollingElement.offsetHeight -
+        e.target.scrollingElement.scrollTop;
+
+      const bottom =
+        e.target.scrollingElement.offsetHeight <=
+        e.target.scrollingElement.clientHeight +
+          e.target.scrollingElement.scrollTop +
+          10;
+
+      console.log(
+        e.target.scrollingElement.clientHeight,
+        e.target.scrollingElement.scrollHeight,
+        e.target.scrollingElement.scrollTop,
+        e.target.scrollingElement.offsetHeight,
+        bottom,
+        diff,
+      );
+      if (bottom) {
+        // console.log('At The Bottom@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'); //Add in what you want here
+        // console.log(data?.seeFeed?.length);
+        fetchMore({
+          variables: {
+            offset: data?.seeFeed.length,
+          },
+        });
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [data, fetchMore]);
 
   return (
     <>
       <PageTitle title="Home" />
-      <div
-        // ref={feedRef}
-        onScroll={() => console.log('Scrolling')}
-      >
+      <div>
         {data &&
           data.seeFeed?.map((photo) => (
             <Photo
@@ -97,8 +123,8 @@ const Home: React.FC = () => {
               comments={photo.comments}
             />
           ))}
-        <button onClick={() => logUserOut()}>Logout</button>
       </div>
+      <button onClick={() => logUserOut()}>Logout</button>
     </>
   );
 };
