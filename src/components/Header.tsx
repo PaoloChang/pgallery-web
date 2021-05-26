@@ -9,6 +9,7 @@ import { isLoggedInVar } from '../apollo';
 import useUser from '../hooks/useUser';
 import routes from '../routes';
 import Avatar from './Avatar';
+import { useEffect } from 'react';
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -62,6 +63,12 @@ const Button = styled.span`
 const Header: React.FC = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const { data } = useUser();
+
+  useEffect(() => {
+    console.log(`Header / useEffect`);
+    console.log(data);
+  }, [data]);
+
   return (
     <StyledHeader>
       <Wrapper>
@@ -82,7 +89,13 @@ const Header: React.FC = () => {
                 <FontAwesomeIcon icon={faCompass} size="2x" />
               </Icon>
               <Icon>
-                <Link to={`/user/${data?.seeMe.username}`}>
+                <Link
+                  to={`/user/${
+                    data?.seeMe?.username !== undefined
+                      ? data.seeMe.username
+                      : 'not_found'
+                  }`}
+                >
                   <Avatar
                     url={data?.seeMe?.avatar ? data?.seeMe?.avatar : ''}
                     lg={false}
